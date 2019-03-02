@@ -150,11 +150,11 @@
                 chargeSetList: [
                     {
                         duration: 1,
-                        price: 1,
+                        price: 0.01,
                     },
                     {
                         duration: 2,
-                        price: 2,
+                        price: 0.01,
                     },
                     {
                         duration: 15,
