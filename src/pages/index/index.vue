@@ -10,6 +10,13 @@
             </swiper>
         </div>
 
+        <!--跑马灯-->
+        <div class="marquee-box">
+            <span v-show="deviceID" class="marquee-text" :style="{ left: marquee.marqueeDistance + 'px', fontSize: marquee.size + 'px'}">
+                {{ marquee.text }}
+            </span>
+        </div>
+
         <div class="main-box">
             <!--功能模块-->
             <div class="function-box">
@@ -88,6 +95,7 @@
 </template>
 
 <script>
+    import variate from './variate'
     import mpButton from 'mpvue-weui/src/button';
     import mpModal from 'mpvue-weui/src/modal';
     import mpLoading from 'mpvue-weui/src/loading';
@@ -101,78 +109,15 @@
 
         data() {
             return {
-                bannerImgList: [
-                    "http://mss.sankuai.com/v1/mss_51a7233366a4427fa6132a6ce72dbe54/newsPicture/05558951-de60-49fb-b674-dd906c8897a6",
-                    "http://mss.sankuai.com/v1/mss_51a7233366a4427fa6132a6ce72dbe54/coursePicture/0fbcfdf7-0040-4692-8f84-78bb21f3395d",
-                    "http://mss.sankuai.com/v1/mss_51a7233366a4427fa6132a6ce72dbe54/management-school-picture/7683b32e-4e44-4b2f-9c03-c21f34320870"
-                ],
-
-                alipayContent: {
-                    title: '提示',
-                    content: '是否已阅读教程，并做好开机准备?',
-                    confirmText: '确定',
-                    cancelText: '返回',
-                    confirmColor: '#1AAD19',
-                    cancelColor: '#ccc',
-                },
-                closeContent: {
-                    title: '提示',
-                    content: '确定提前关闭设备吗？',
-                    confirmText: '确定',
-                    cancelText: '返回',
-                    confirmColor: '#1AAD19',
-                    cancelColor: '#ccc',
-                },
-                functionList: [
-                    {
-                        className: 'we-icon',
-                        textName: '我们',
-                        iconUrl: '/static/icon/we.png'
-                    },
-                    {
-                        className: 'course-icon',
-                        textName: '教程',
-                        iconUrl: '/static/icon/course.png'
-                    },
-                    {
-                        className: 'service-icon',
-                        textName: '客服',
-                        iconUrl: '/static/icon/service.png'
-                    },
-                    {
-                        className: 'record-icon',
-                        textName: '记录',
-                        iconUrl: '/static/icon/record.png'
-                    },
-                ],
+                variate,
+                deviceID: '',
+                bannerImgList: variate.bannerImgList,
+                alipayContent: variate.alipayContent,
+                closeContent: variate.closeContent,
+                functionList: variate.functionList,
                 chargeSetTimeIcon: '/static/icon/time.png',
                 chargeSetmoneyIcon: '/static/icon/RMB.png',
-                chargeSetList: [
-                    {
-                        duration: 1,
-                        price: 0.01,
-                    },
-                    {
-                        duration: 2,
-                        price: 0.01,
-                    },
-                    {
-                        duration: 15,
-                        price: 15,
-                    },
-                    {
-                        duration: 20,
-                        price: 20,
-                    },
-                    {
-                        duration: 25,
-                        price: 25,
-                    },
-                    {
-                        duration: 30,
-                        price: 30,
-                    },
-                ],
+                chargeSetList: variate.chargeSetList,
                 currentChargeIndex: '',
                 chargeSetShow: true,  // 费用选择窗口是否显示
                 countDownShow: false, // 倒计时窗口是否显示
@@ -183,6 +128,19 @@
                 },
                 countDownText: '',
                 isShowLoading: false,
+
+                // 跑马灯
+                marquee: {
+                    text: '',
+                    marqueePace: 1,//滚动速度
+                    marqueeDistance: 0,//初始滚动距离
+                    marquee2_margin: 60,
+                    size: 14,
+                    interval: 20, // 时间间隔
+                    length: 0,
+                    windowWidth: 0,
+                    marqueeTimer: null,
+                },
             };
         },
 
@@ -191,6 +149,7 @@
         },
 
         onShow () {
+            let that = this;
             this.countDownText = '';
             let beginTime = Math.round(new Date() / 1000); // 获得当前时间
             try {
@@ -201,9 +160,7 @@
             } catch (e) {
                 this.countDown.endTime = 0;
             }
-
             let beforeCountDownShow = null;
-            let that = this;
             wx.getStorage({
                 key: 'countDownShow',
                 success(res) {
@@ -224,6 +181,12 @@
                     }
                 }
             })
+
+            // 跑马灯
+            this.deviceID = '123456';
+            this.marquee.text = '温馨提示：为了提高您的使用体验，请在使用设备前先阅读教程。';
+            this.marquee.text = this.marquee.text +  '您扫描的设备ID是：' + this.deviceID;
+            this.marqueeRun();
         },
 
         onHide () {
@@ -237,6 +200,7 @@
                 key: 'countDownShow',
                 data: this.countDownShow
             })
+            clearInterval(this.marquee.marqueeTimer);
         },
 
         methods: {
@@ -346,7 +310,26 @@
                 this.chargeSetShow = true;
                 this.finishShow = false;
                 this.countDownShow = false;
-            }
+            },
+
+            marqueeRun () {
+                let that = this;
+                this.marquee.length = this.marquee.text.length * this.marquee.size; //文字长度
+                this.marquee.windowWidth = wx.getSystemInfoSync().windowWidth;// 屏幕宽度
+                this.marquee.marqueeDistance = this.marquee.windowWidth;
+                this.marquee.marquee2_margin = this.marquee.length < this.marquee.windowWidth ?
+                    this.marquee.windowWidth - this.marquee.length : this.marquee.marquee2_margin;
+
+                this.marquee.marqueeTimer = setInterval(function () {
+                    if (-that.marquee.marqueeDistance < that.marquee.length) {
+                        that.marquee.marqueeDistance = that.marquee.marqueeDistance - that.marquee.marqueePace
+                    } else {
+                        clearInterval(that.marquee.marqueeTimer);
+                        that.marquee.marqueeDistance = that.marquee.windowWidth;
+                        that.marqueeRun();
+                    }
+                }, that.marquee.interval);
+            },
 
         }, // methods end
     };
