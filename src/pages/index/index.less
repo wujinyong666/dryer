@@ -120,4 +120,34 @@
     }
 }
 
+.scanCode-box {
+
+    .finger-box {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        .finger-img {
+            animation: move 1s;
+            animation-direction: alternate;
+            animation-iteration-count: infinite;
+        }
+        img {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            transform:rotate(90deg);
+            -ms-transform:rotate(90deg);
+            -moz-transform:rotate(90deg);
+            -webkit-transform:rotate(90deg);
+            -o-transform:rotate(90deg);
+        }
+    }
+}
+
+@keyframes move{
+    from { transform: translate(0, 0) }
+    to   { transform: translate(0, 20px) }
+}
+
 
