@@ -12,8 +12,9 @@
 
         <!--跑马灯-->
         <div class="marquee-box">
-            <span v-show="deviceID" class="marquee-text" :style="{ left: marquee.marqueeDistance + 'px', fontSize: marquee.size + 'px'}">
-                {{ marquee.text }}
+            <span class="marquee-text" :style="{ left: marquee.marqueeDistance + 'px', fontSize: marquee.size + 'px'}">
+                <span>{{ marquee.text }}</span>
+                <span v-if="deviceID">{{ marquee.deviceText }}</span>
             </span>
         </div>
 
@@ -42,8 +43,12 @@
                         </p>
                     </div>
                 </div>
-
                 <mp-button type="primary" size="large" btnClass="mb15" @click="alipayHandle">支付启动</mp-button>
+            </div>
+
+            <!-- 如果不是扫码进入小程序的，需要在这里扫码 -->
+            <div v-if="!chargeSetShow">
+                扫一扫
             </div>
 
             <!-- 倒计时 -->
@@ -131,7 +136,8 @@
 
                 // 跑马灯
                 marquee: {
-                    text: '',
+                    text: '温馨提示：为了提高您的使用体验，请在使用设备前先阅读教程。',
+                    deviceText: '',
                     marqueePace: 1,//滚动速度
                     marqueeDistance: 0,//初始滚动距离
                     marquee2_margin: 60,
@@ -150,6 +156,19 @@
 
         onShow () {
             let that = this;
+
+            this.deviceID = ''; // 获得设备ID
+            // 跑马灯
+            this.marquee.deviceText = '您扫描的设备ID是：' + this.deviceID;
+            this.marqueeRun();
+
+            if (!this.deviceID) {  // 如果没有扫码
+                this.chargeSetShow = false;
+                this.countDownShow = false;
+                this.finishShow = false;
+                return false;
+            }
+
             this.countDownText = '';
             let beginTime = Math.round(new Date() / 1000); // 获得当前时间
             try {
@@ -181,12 +200,6 @@
                     }
                 }
             })
-
-            // 跑马灯
-            this.deviceID = '123456';
-            this.marquee.text = '温馨提示：为了提高您的使用体验，请在使用设备前先阅读教程。';
-            this.marquee.text = this.marquee.text +  '您扫描的设备ID是：' + this.deviceID;
-            this.marqueeRun();
         },
 
         onHide () {
