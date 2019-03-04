@@ -155,20 +155,33 @@
                     length: 0,
                     windowWidth: 0,
                     marqueeTimer: null
-                }
+                },
+                userId: '',
             };
         },
 
         created() {
-            /*this.currentChargeIndex = 1;*/
-            /*wx.login({
+            let that = this;
+            wx.login({
                 success: function(res) {
-                    console.log(res.code);
+                    wx.setStorageSync('code', res.code);
+                    wx.request({
+                        url: 'http://192.168.31.100:8010/login/',
+                        data: {
+                            code: res.code
+                        },
+                        header: {
+                            "Content-Type": "applciation/json"
+                        },
+                        success: function (res) {
+                            if (res.data.code === 0) {
+                                that.userId = res.data.data.userId
+                                wx.setStorageSync('userId', that.userId);
+                            }
+                        },
+                    })
                 }
-            });*/
-            
-
-
+            });
         },
 
         onShow() {

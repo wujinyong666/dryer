@@ -1,8 +1,16 @@
 <template>
     <div class="page-style my-center">
+
+        <!--<open-data type="userAvatarUrl"></open-data>
+        <open-data type="userNickName"></open-data>-->
+
         <header>
-            <img :src="headerImg" alt="">
-            <p>{{ userName }}</p>
+            <view class="userinfo">
+                <view class="userinfo-avatar">
+                    <open-data  type="userAvatarUrl"></open-data>
+                </view>
+                <open-data type="userNickName"></open-data>
+            </view>
         </header>
 
         <div class="record">
@@ -32,9 +40,9 @@
 
         },
 
-        methods () {
+        methods: {
 
-        },
+        }
     };
 </script>
 
