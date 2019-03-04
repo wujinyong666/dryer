@@ -131,7 +131,7 @@
                 chargeSetTimeIcon: "/static/icon/time.png",
                 chargeSetmoneyIcon: "/static/icon/RMB.png",
                 chargeSetList: variate.chargeSetList,
-                currentChargeIndex: "",
+                currentChargeIndex: 0, // 设置默认选择时长
                 scanCodeShow: false, // 扫一扫窗口是否显示
                 chargeSetShow: false,  // 费用选择窗口是否显示
                 countDownShow: false, // 倒计时窗口是否显示
@@ -160,7 +160,15 @@
         },
 
         created() {
-            this.currentChargeIndex = 1;
+            /*this.currentChargeIndex = 1;*/
+            /*wx.login({
+                success: function(res) {
+                    console.log(res.code);
+                }
+            });*/
+            
+
+
         },
 
         onShow() {
@@ -182,7 +190,6 @@
             this.marqueeRun(); // 跑马灯运行
 
             if (!this.deviceID) {  // 如果没有扫码
-                console.log("*** onShow 如果没有扫码");
                 this.scanCodeShow = true;
                 this.chargeSetShow = false;
                 this.countDownShow = false;
