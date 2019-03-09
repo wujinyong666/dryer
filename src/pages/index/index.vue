@@ -279,10 +279,14 @@
                 let url = '';
                 switch (index) {
                     case 0:  // 我们
+                        url = '../us/main';
+                        mpvue.navigateTo({ url });
                         break;
                     case 1:  // 教程
                         break;
                     case 2:  // 客服
+                        url = '../service/main';
+                        mpvue.navigateTo({ url });
                         break;
                     case 3:  // 记录
                         url = "../myCenter/main";
@@ -293,7 +297,7 @@
 
             /**
              *  进入到小程序后，扫一扫设备二维码功能，获取使用设备ID;
-             *  如果扫描成功获得设备ID，将其存储道缓存中，并显示费用选择窗口，其他窗口隐藏
+             *  如果扫码成功获得设备ID，将其存储道缓存中，并显示费用选择窗口，其他窗口隐藏
              */
             scanCodeHandle () {
                 let that = this;
@@ -304,7 +308,7 @@
                             data: res.result // 将设备ID存入缓存
                         });
                         that.deviceID = res.result;
-                        that.marquee.deviceText = "您扫描的设备ID是：" + that.deviceID;
+                        that.marquee.deviceText = "您扫码的设备ID是：" + that.deviceID;
                         that.chargeSetShow = true;
                         that.scanCodeShow = false;
                         that.countDownShow = false;

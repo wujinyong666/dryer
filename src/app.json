@@ -2,7 +2,9 @@
     "pages": [
         "pages/index/main",
         "pages/myCenter/main",
-        "pages/counter/main"
+        "pages/counter/main",
+        "pages/us/main",
+        "pages/service/main"
     ],
     "window": {
         "backgroundTextStyle": "light",
