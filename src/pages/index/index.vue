@@ -236,6 +236,7 @@
                         that.chargeSetShow = false;
                         that.countDownShow = false;
                         that.finishShow = true;
+                        that.deviceID = '';
                     } else if (beforeCountDownShow && beginTime < that.countDown.endTime) {
                         that.timer(beginTime, that.countDown.endTime);
                         that.scanCodeShow = false;
@@ -247,6 +248,7 @@
                         that.chargeSetShow = false;
                         that.finishShow = false;
                         that.countDownShow = false;
+                        that.deviceID = '';
                     }
                 }
             });
@@ -303,16 +305,16 @@
                 let that = this;
                 wx.scanCode({
                     success: (res) => {
-                        wx.setStorage({
-                            key: "deviceID",
-                            data: res.result // 将设备ID存入缓存
-                        });
                         that.deviceID = res.result;
                         that.marquee.deviceText = "您扫码的设备ID是：" + that.deviceID;
                         that.chargeSetShow = true;
                         that.scanCodeShow = false;
                         that.countDownShow = false;
                         that.finishShow = false;
+                        wx.setStorage({
+                            key: "deviceID",
+                            data: res.result // 将设备ID存入缓存
+                        });
                     },
                     fail: (res) => {
                         console.log(res);
@@ -369,6 +371,7 @@
                         this.chargeSetShow = false;
                         this.countDownShow = false;
                         this.finishShow = true;
+                        this.deviceID = '';
                     }
                 }, 1000);
             },
