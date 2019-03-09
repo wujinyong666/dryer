@@ -273,6 +273,15 @@
                 data: this.countDownShow
             });
             clearInterval(this.marquee.marqueeTimer);
+
+            if (this.scanCodeShow || this.chargeSetShow) {
+                wx.removeStorage({
+                    key: 'deviceID',
+                    success(res) {
+                        console.log("清除设备ID成功！");
+                    }
+                })
+            }
         },
 
         methods: {
