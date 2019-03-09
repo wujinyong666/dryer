@@ -1,16 +1,14 @@
 <template>
     <div class="page-style my-center">
-
-        <!--<open-data type="userAvatarUrl"></open-data>
-        <open-data type="userNickName"></open-data>-->
-
         <header>
-            <view class="userinfo">
-                <view class="userinfo-avatar">
+            <div class="userinfo">
+                <div class="userinfo-avatar">
                     <open-data  type="userAvatarUrl"></open-data>
-                </view>
-                <open-data type="userNickName"></open-data>
-            </view>
+                </div>
+                <div class="user-name">
+                    <open-data type="userNickName"></open-data>
+                </div>
+            </div>
         </header>
 
         <div class="record">
@@ -31,8 +29,7 @@
     export default {
         data () {
             return {
-                headerImg: 'http://img.zcool.cn/community/01fcbc565d0ab432f87596471c72a0.jpg@900w_1l_2o_100sh.jpg',
-                userName: 'John',
+
             };
         },
 
